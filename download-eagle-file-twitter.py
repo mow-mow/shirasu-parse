@@ -7,11 +7,11 @@ import json
 import env
 
 # twitter search word
-search_text = "#カトラス生誕祭2023 -filter:retweet min_faves:100"
+search_text = "#ケイ生誕祭2023 -filter:retweet min_faves:100"
 # Add Eagle Default Tag
-default_tags= ["ガールズ&パンツァー", "カトラス"]
+default_tags= ["ガールズ&パンツァー", "ケイ"]
 # Save Directory Name
-save_folder="2023/カトラス生誕祭2023"
+save_folder="2023/ケイ生誕祭2023"
 
 
 #################################################
@@ -95,6 +95,7 @@ def search_tweet_list():
     url = "https://api.twitter.com/1.1/search/tweets.json"
     params = {
             "q": search_text,
+            "count" : 100,
             "lang": "ja",
         }
 
