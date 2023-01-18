@@ -1,0 +1,4 @@
+download/
+__pycache__
+env.py
+.DS_STORE
