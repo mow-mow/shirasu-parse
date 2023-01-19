@@ -52,25 +52,31 @@ def main():
 
     dirs = glob.glob(pathname)
     for dir in dirs:
-        print(dir)
+        print("Import Directory :", dir)
 
         folder_id=init_eagle_folder(dir.replace(os.path.dirname(os.path.abspath(__file__)) + "/download/", ""))
 
         pathname = dir + "*.json"
-        print("==> search eagle file :" + pathname)
+        print("==> Find Eagle file :", pathname)
         files = glob.glob(pathname)
-        for file in files:
-            print(file)
+        for i, file in enumerate(files):
+            print("[", i+1, "/", len(files), "] target Item :", file)
 
             json_open = open(file, 'r')
             json_load = json.load(json_open)
             json_load["folderId"] = folder_id
-            print(json_load)
-
+#            print(json_load)
+            print("==> HTTP Request",)
+            print("URL:", 'http://localhost:41595/api/item/addFromPath')
             r = requests.post('http://localhost:41595/api/item/addFromPath', json=json_load)
-            print(r.json())
-
-
+            print("[Request Body]", json_load)
+            print("[Response]", r.json())
+            print("-----")
+            print("[", i+1, "/", len(files), "] Item Add Sucuccess !")
+            print("--------------")
+        print(">> Items Add Complete!", dir)
+        print("-----")
+    print("Processing Exit !!") 
 
 if __name__ == "__main__":
     main()

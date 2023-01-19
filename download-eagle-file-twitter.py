@@ -33,7 +33,7 @@ def download_image_by_id(id):
     url = "https://api.twitter.com/1.1/statuses/show.json"
     res = twitter.get(url, params={'id': id})
 
-    print('status:' , id)
+    print('status:', id)
     print("---------------")
     print(res)
     if res.status_code != 200:
@@ -53,24 +53,29 @@ def download_image_by_id(id):
 
     print(json.dumps(r, indent=2))
 
-
     tags = [hashtag["text"] for hashtag in r["entities"]["hashtags"]]            
-    print(default_tags + tags)
+    print("[tags]", default_tags + tags)
     
     annotation= r["user"]["name"]
-    print(annotation)
+    print("[annotation]", annotation)
+    print("* ", r["user"]["screen_name"])
 
-    print(r["user"]["screen_name"])
-
-
-    for media in medias:
-        url = media["media_url_https"]
-
-        name = url.split("/")
+    print("====> Start Save File")
+    print("Media File found :", len(medias))
+    print("------------")
+    for i, media in enumerate(medias):
+        print("<<Media Info>")
         pathname = dirname_abs + "/" + name[-1]
-        print(pathname)
-        urllib.request.urlretrieve(url + ":large", pathname)
+        print("[path]", pathname)
         website = media["expanded_url"]
+        print("[website]", website)
+
+        url = media["media_url_https"]
+        name = url.split("/")
+
+        print("------")
+        print("Download Media File :", url, "=> ", pathname)
+        urllib.request.urlretrieve(url + ":large", pathname)
 
 
         str = {
@@ -80,11 +85,16 @@ def download_image_by_id(id):
             "annotation": annotation,
             "path": pathname
         }
-        with open(dirname_abs + "/" + os.path.splitext(name[-1])[0] + ".json", 'w') as f:
+        eagle_file_pathname = dirname_abs + "/" + os.path.splitext(name[-1])[0] + ".json"
+        print("------")
+        print("Create Eagle File :", eagle_file_pathname)
+        with open(eagle_file_pathname, 'w') as f:
             json.dump(str, f, ensure_ascii=False, indent=4)
+        print("------")
 
-        sleep(3)
-
+    sleep(3)
+    print("[", i+1, "/", len(medias), "] Download Complete")
+    print("------------")
     return False
 
 
@@ -114,9 +124,12 @@ def search_tweet_list():
 def main():
     ids = search_tweet_list()
     if ids :
-        since_id = ids[0]
-        for tweet_id in ids:
-            download_image_by_id(tweet_id)
+        print("Find ", len(ids), " tweet")
+        for i, id in enumerate(ids):
+            print("------------------")
+            print ("[", i+1, "/", len(ids), " ] Download Image Start ! ", id)
+            print("------------------")
+            download_image_by_id(id)
                 
     print("Processing Exit !!")
 
